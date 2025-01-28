@@ -4,6 +4,8 @@ import (
 	"flag"
 	"rpc-server/cmd"
 	"rpc-server/config"
+	"rpc-server/gRPC/server"
+	"time"
 )
 
 var configFlag = flag.String("config", "./config.toml", "config path")
@@ -13,5 +15,10 @@ func main() {
 
 	cfg := config.NewConfig(*configFlag)
 
-	cmd.NewApp(cfg)
+	if err := server.NewGRPCServer(cfg); err != nil {
+		panic(err)
+	} else {
+		time.Sleep(1e9)
+		cmd.NewApp(cfg)
+	}
 }
